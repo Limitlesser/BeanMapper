@@ -1,4 +1,4 @@
-package wind.beanmapper;
+package wind.beanmapper.property;
 
 /**
  * Created by wind on 2016/8/13.
@@ -7,9 +7,9 @@ public class Property<T> {
 
     interface Entry<T> {
 
-        T get();
+        T get(Object object);
 
-        void set(T value);
+        void set(Object object, T value);
     }
 
     private String name;
@@ -32,11 +32,11 @@ public class Property<T> {
         return type;
     }
 
-    public T get() {
-        return entry.get();
+    public T get(Object object) {
+        return entry.get(object);
     }
 
-    public void set(T value) {
-        entry.set(value);
+    public void set(Object object, T value) {
+        entry.set(object, value);
     }
 }

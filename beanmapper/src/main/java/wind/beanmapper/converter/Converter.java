@@ -1,4 +1,4 @@
-package wind.beanmapper;
+package wind.beanmapper.converter;
 
 /**
  * Created by wind on 2016/8/13.
