@@ -7,16 +7,15 @@ import wind.beanmapper.config.MapperConfig;
 /**
  * Created by wind on 2016/8/15.
  */
-public class MapperContext<T> extends Context<T, Mapper> {
+public class MapperContext<T, R> extends Context<T, R> {
 
-    private BaseMapper mapper;
-    private MapperConfig mapperConfig;
+    protected MapperConfig mapperConfig;
 
-    public MapperContext(T context, Callback<Mapper> callback) {
+    public MapperContext(T context, Callback<R> callback) {
         super(context, callback);
     }
 
-    public ConfigContext<MapperContext<T>> config() {
+    public ConfigContext<MapperContext<T,R>> config() {
         return new ConfigContext<>(this, new Callback<MapperConfig>() {
             @Override
             public void end(MapperConfig mapperConfig1) {
@@ -27,9 +26,9 @@ public class MapperContext<T> extends Context<T, Mapper> {
 
 
     @Override
-    protected Mapper result() {
-        mapper = new BaseMapper(mapperConfig);
-        return mapper;
+    protected R result() {
+        result = (R) new BaseMapper(mapperConfig);
+        return result;
     }
 
 }

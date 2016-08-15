@@ -9,6 +9,10 @@ public class PropertyConfig<A, B> {
 
     public Converter<A, B> converter;
 
+    public PropertyConfig(Converter converter) {
+        this.converter = converter;
+    }
+
     public Converter<A, B> getConverter() {
         return converter;
     }

@@ -5,10 +5,6 @@ package wind.beanmapper.converter;
  */
 public interface Converter<A, B> {
 
-    Class<A> typeA();
-
-    Class<B> typeB();
-
     B convert(A a);
 
     A reconvert(B b);

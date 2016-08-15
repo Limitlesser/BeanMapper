@@ -5,8 +5,10 @@ import java.util.Map;
 
 import wind.beanmapper.instantiation.ReflectInstantiaer;
 import wind.beanmapper.mapper.ClassMapper;
+import wind.beanmapper.mapper.ClassMapperContext;
 import wind.beanmapper.mapper.Mapper;
 import wind.beanmapper.mapper.MapperContext;
+import wind.beanmapper.property.CachedPropertyResolver;
 import wind.beanmapper.property.ReflectPropertyResolver;
 
 /**
@@ -24,7 +26,7 @@ public class BeanMapper {
             }
         }).config()
                 .instantiater(new ReflectInstantiaer())
-                .propertyResolver(new ReflectPropertyResolver())
+                .propertyResolver(new CachedPropertyResolver(new ReflectPropertyResolver()))
                 .end()
                 .end();
     }
@@ -38,6 +40,15 @@ public class BeanMapper {
             return (D) classMapper.map(source, desClass);
         }
         return (D) mapper.map(source, desClass);
+    }
+
+    public static <A, B> ClassMapperContext<?, A, B> classMapper(Class<A> clsA, Class<B> clsB) {
+        return new ClassMapperContext<>(null, new Context.Callback<Mapper>() {
+            @Override
+            public void end(Mapper o) {
+
+            }
+        });
     }
 
     private static ClassMapper<?, ?> getClassMapper(Class clsA, Class clsB) {

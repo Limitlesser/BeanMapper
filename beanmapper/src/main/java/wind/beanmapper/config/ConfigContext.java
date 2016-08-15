@@ -11,47 +11,53 @@ import wind.beanmapper.property.PropertyResolver;
 public class ConfigContext<T> extends Context<T, MapperConfig> {
 
     private MapperConfig mapperConfig;
-    private MapperConfig.Builder builder;
 
     public ConfigContext(T context, Callback<MapperConfig> callback) {
         super(context, callback);
-        builder = new MapperConfig.Builder();
+        mapperConfig = new MapperConfig();
     }
 
     public ConfigContext<T> propertyResolver(PropertyResolver propertyResolver) {
-        builder.propertyResolver(propertyResolver);
+        mapperConfig.setPropertyResolver(propertyResolver);
         return this;
     }
 
     public ConfigContext<T> instantiater(Instantiater instantiater) {
-        builder.instantiater(instantiater);
+        mapperConfig.setInstantiater(instantiater);
         return this;
     }
 
     public ConfigContext<T> converter(Converter converter) {
-        builder.converter(converter);
+        mapperConfig.addConverter(converter);
         return this;
     }
 
-    public ConfigContext<T> propertyConfig(String name, PropertyConfig propertyConfig) {
-        builder.propertyConfig(name, propertyConfig);
+    public ConfigContext<T> field(String name, Converter converter) {
+        return field(name, new PropertyConfig(converter));
+    }
+
+    public ConfigContext<T> field(String name, PropertyConfig propertyConfig) {
+        mapperConfig.putPropertyConfig(name, propertyConfig);
         return this;
     }
 
-    public ConfigContext<T> propertyConfig(String nameA, String nameB, PropertyConfig propertyConfig) {
-        builder.propertyConfig(nameA, nameB, propertyConfig);
+    public ConfigContext<T> field(String nameA, String nameB, PropertyConfig propertyConfig) {
+        mapperConfig.putPropertyConfig(nameA, nameB, propertyConfig);
         return this;
     }
 
-    public ConfigContext<T> propertyMapper(String nameA, String nameB) {
-        builder.propertyMapper(nameA, nameB);
+    public ConfigContext<T> field(String nameA, String nameB, Converter<?, ?> converter) {
+        return field(nameA, nameB, new PropertyConfig(converter));
+    }
+
+    public ConfigContext<T> field(String nameA, String nameB) {
+        mapperConfig.addPropertyMapper(nameA, nameB);
         return this;
     }
 
 
     @Override
     protected MapperConfig result() {
-        mapperConfig = builder.build();
         return mapperConfig;
     }
 }

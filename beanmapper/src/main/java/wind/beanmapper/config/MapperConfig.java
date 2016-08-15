@@ -6,12 +6,11 @@ import java.util.Map;
 
 import wind.beanmapper.converter.Converter;
 import wind.beanmapper.instantiation.Instantiater;
-import wind.beanmapper.instantiation.ReflectInstantiaer;
 import wind.beanmapper.property.PropertyMap;
 import wind.beanmapper.property.PropertyMapper;
 import wind.beanmapper.property.PropertyNameMapper;
 import wind.beanmapper.property.PropertyResolver;
-import wind.beanmapper.property.ReflectPropertyResolver;
+import wind.beanmapper.utils.ReflectUtils;
 
 /**
  * Created by wind on 2016/8/13.
@@ -27,14 +26,6 @@ public class MapperConfig {
     private PropertyMap<PropertyMapper> propertyMappers;
 
     private PropertyMap<PropertyConfig<?, ?>> propertyConfigMap;
-
-    private MapperConfig(Builder builder) {
-        propertyResolver = builder.propertyResolver;
-        instantiater = builder.instantiater;
-        converterMap = builder.converterMap;
-        propertyMappers = builder.propertyMappers;
-        propertyConfigMap = builder.propertyConfigMap;
-    }
 
 
     public PropertyResolver getPropertyResolver() {
@@ -78,11 +69,11 @@ public class MapperConfig {
         if (converterMap == null) {
             converterMap = new HashMap<>();
         }
-        Map<Class<?>, Converter<?, ?>> map = converterMap.get(converter.typeA());
+        Map<Class<?>, Converter<?, ?>> map = converterMap.get(ReflectUtils.getParameterizedTypes(converter)[0]);
         if (map == null) {
             map = new HashMap<>();
         }
-        map.put(converter.typeB(), converter);
+        map.put(ReflectUtils.getParameterizedTypes(converter)[1], converter);
     }
 
     public void putPropertyConfig(String name, PropertyConfig propertyConfig) {
@@ -97,66 +88,4 @@ public class MapperConfig {
         propertyMappers.put(nameA, nameB, new PropertyNameMapper(nameA, nameB));
     }
 
-    public static class Builder {
-
-        private PropertyResolver propertyResolver;
-
-        private Map<Class<?>, Map<Class<?>, Converter<?, ?>>> converterMap;
-
-        private Instantiater instantiater;
-
-        private PropertyMap<PropertyMapper> propertyMappers = new PropertyMap<>();
-
-        private PropertyMap<PropertyConfig<?, ?>> propertyConfigMap = new PropertyMap<>();
-
-        public Builder() {
-        }
-
-        public Builder propertyResolver(PropertyResolver propertyResolver) {
-            this.propertyResolver = propertyResolver;
-            return this;
-        }
-
-        public Builder instantiater(Instantiater instantiater) {
-            this.instantiater = instantiater;
-            return this;
-        }
-
-        public Builder converter(Converter converter) {
-            if (converterMap == null) {
-                converterMap = new HashMap<>();
-            }
-            Map<Class<?>, Converter<?, ?>> map = converterMap.get(converter.typeA());
-            if (map == null) {
-                map = new HashMap<>();
-            }
-            map.put(converter.typeB(), converter);
-            return this;
-        }
-
-        public Builder propertyConfig(String name, PropertyConfig propertyConfig) {
-            propertyConfigMap.put(name, propertyConfig);
-            return this;
-        }
-
-        public Builder propertyConfig(String nameA, String nameB, PropertyConfig propertyConfig) {
-            propertyConfigMap.put(nameA, nameB, propertyConfig);
-            return this;
-        }
-
-        public Builder propertyMapper(String nameA, String nameB) {
-            propertyMappers.put(nameA, nameB, new PropertyNameMapper(nameA, nameB));
-            return this;
-        }
-
-        public MapperConfig build() {
-            if (propertyResolver == null) {
-                propertyResolver = new ReflectPropertyResolver();
-            }
-            if (instantiater == null) {
-                instantiater = new ReflectInstantiaer();
-            }
-            return new MapperConfig(this);
-        }
-    }
 }
