@@ -5,6 +5,6 @@ package wind.beanmapper.mapper;
  */
 public interface Mapper<S, D> {
 
-    D map(S source);
+    D map(S source, Class<D> desClass);
 
 }

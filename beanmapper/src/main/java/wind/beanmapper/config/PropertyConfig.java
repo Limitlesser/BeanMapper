@@ -8,7 +8,8 @@ import wind.beanmapper.converter.Converter;
 public class PropertyConfig<A, B> {
 
     public Converter<A, B> converter;
-    public boolean mapNull;
-    public boolean mapNullReverse;
 
+    public Converter<A, B> getConverter() {
+        return converter;
+    }
 }
