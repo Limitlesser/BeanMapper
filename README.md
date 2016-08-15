@@ -2,7 +2,7 @@
 
 a lib for map properties of java pojo
 
-# Base Useage
+# Base Usage
 
         A a = new A();
         a.setName("wind");
@@ -33,5 +33,6 @@ a lib for map properties of java pojo
         B b = classMapper.map(a, B.class);
 
 this project protected by `SATA` protocol (The Star And Thank Author License) 
-you shall give a star before your useage ,details see [LICENSE](LICENSE.txt)
+
+you shall give a star before your usage ,details see [LICENSE](LICENSE.txt)
 
