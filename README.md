@@ -34,5 +34,5 @@ a lib for map properties of java pojo
 
 this project protected by `SATA` protocol (The Star And Thank Author License) 
 
-you shall give a star before your usage ,details see [LICENSE](LICENSE.txt)
+you shall give a star before your usage ,details see [LICENSE](LICENSE)
 
