@@ -5,9 +5,11 @@ import java.util.Map;
 import wind.beanmapper.config.MapperConfig;
 import wind.beanmapper.config.PropertyConfig;
 import wind.beanmapper.converter.Converter;
+import wind.beanmapper.converter.Converters;
 import wind.beanmapper.property.Property;
 import wind.beanmapper.property.PropertyMapper;
 import wind.beanmapper.property.PropertyResolver;
+import wind.beanmapper.utils.ReflectUtils;
 
 /**
  * Created by wind on 2016/8/13.
@@ -43,21 +45,28 @@ public class BaseMapper<S, D> implements Mapper<S, D> {
 
             Property propertyS = sProperties.get(mappedName);
 
-            PropertyConfig propertyConfig = config.getPropertyConfig(nameD);
+            if (propertyS == null) {
+                continue;
+            }
 
-            if (propertyS.getType().equals(propertyD.getType())) {
+            PropertyConfig propertyConfig = config.getPropertyConfig(nameD);
+            Converter converter = null;
+            if (propertyConfig != null) {
+                converter = propertyConfig.getConverter();
+            }
+
+            if (propertyS.getType().equals(propertyD.getType()) && converter == null) {
                 propertyD.set(des, propertyS.get(source));
             } else {
                 Object converted;
-                Converter converter = propertyConfig.getConverter();
+
                 if (converter == null) {
                     converter = config.getConverter(propertyS.getType(), propertyD.getType());
                 }
-                if (propertyS.getType().equals(converter.typeA())) {
-                    converted = converter.convert(propertyS.get(source));
-                } else {
-                    converted = converter.reconvert(propertyS.get(source));
+                if (converter == null) {
+                    continue;
                 }
+                    converted = converter.convert(propertyS.get(source));
                 propertyD.set(des, converted);
             }
         }

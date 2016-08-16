@@ -5,15 +5,15 @@ package wind.beanmapper;
  */
 public class B {
 
-    private String name;
+    private String Name;
     private int age;
 
     public String getName() {
-        return name;
+        return Name;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.Name = name;
     }
 
     public int getAge() {
@@ -27,7 +27,7 @@ public class B {
     @Override
     public String toString() {
         return "B{" +
-                "name='" + name + '\'' +
+                "Name='" + Name + '\'' +
                 ", age=" + age +
                 '}';
     }

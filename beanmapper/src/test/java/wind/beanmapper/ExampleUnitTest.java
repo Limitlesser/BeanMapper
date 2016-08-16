@@ -23,9 +23,7 @@ public class ExampleUnitTest {
 
     @Test
     public void test() throws Exception {
-        A a = new A();
-        a.setName("wind");
-        a.setAge(17);
+        A a = new A("wind",17);
         B b = BeanMapper.map(a, B.class);
         System.out.print(b);
         assertEquals("wind", b.getName());
@@ -35,25 +33,25 @@ public class ExampleUnitTest {
 
     @Test
     public void testCustom() {
-        A a = new A();
+        A a = new A("wind",17);
         ClassMapper<A, B> classMapper = BeanMapper.classMapper(A.class, B.class)
                 .config()
-                .propertyResolver(new CachedPropertyResolver(new ReflectPropertyResolver()))
+                .propertyResolver(new ReflectPropertyResolver())
                 .instantiater(new ReflectInstantiaer())
-                .field("name", "Name")
-                .field("birthday", "age", new Converter<Date, Integer>() {
+                .field("name", "Name", new Converter<String, String>() {
                     @Override
-                    public Integer convert(Date date) {
-                        return new Date().getYear() - date.getYear();
+                    public String convert(String s) {
+                        return s.toUpperCase();
                     }
 
                     @Override
-                    public Date reconvert(Integer integer) {
-                        return new Date(new Date().getYear() - integer, 0, 0);
+                    public String reconvert(String s) {
+                        return s.toLowerCase();
                     }
                 })
                 .end()
                 .get();
         B b = classMapper.map(a, B.class);
+        System.out.print(b);
     }
 }

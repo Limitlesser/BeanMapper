@@ -26,7 +26,7 @@ public class BeanMapper {
             }
         }).config()
                 .instantiater(new ReflectInstantiaer())
-                .propertyResolver(new CachedPropertyResolver(new ReflectPropertyResolver()))
+                .propertyResolver(new ReflectPropertyResolver())
                 .end()
                 .end();
     }

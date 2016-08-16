@@ -23,9 +23,9 @@ public class MapperConfig {
 
     private Instantiater instantiater;
 
-    private PropertyMap<PropertyMapper> propertyMappers;
+    private PropertyMap<PropertyMapper> propertyMappers = new PropertyMap<>();
 
-    private PropertyMap<PropertyConfig<?, ?>> propertyConfigMap;
+    private PropertyMap<PropertyConfig<?, ?>> propertyConfigMap = new PropertyMap<>();
 
 
     public PropertyResolver getPropertyResolver() {
@@ -81,6 +81,7 @@ public class MapperConfig {
     }
 
     public void putPropertyConfig(String nameA, String nameB, PropertyConfig propertyConfig) {
+        propertyMappers.put(nameA, nameB, new PropertyNameMapper(nameA, nameB));
         propertyConfigMap.put(nameA, nameB, propertyConfig);
     }
 
