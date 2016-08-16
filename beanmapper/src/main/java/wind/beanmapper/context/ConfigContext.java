@@ -1,6 +1,7 @@
-package wind.beanmapper.config;
+package wind.beanmapper.context;
 
-import wind.beanmapper.Context;
+import wind.beanmapper.config.MapperConfig;
+import wind.beanmapper.config.PropertyConfig;
 import wind.beanmapper.converter.Converter;
 import wind.beanmapper.instantiation.Instantiate;
 import wind.beanmapper.property.PropertyResolver;

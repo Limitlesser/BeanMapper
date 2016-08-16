@@ -6,7 +6,7 @@ import java.util.Map;
 
 import wind.beanmapper.converter.Converter;
 import wind.beanmapper.instantiation.Instantiate;
-import wind.beanmapper.property.PropertyMap;
+import wind.beanmapper.utils.AnyDoubleKeyMap;
 import wind.beanmapper.property.PropertyMapper;
 import wind.beanmapper.property.PropertyNameMapper;
 import wind.beanmapper.property.PropertyResolver;
@@ -22,9 +22,9 @@ public class MapperConfig {
 
     private Instantiate instantiate;
 
-    private PropertyMap<PropertyMapper> propertyMappers = new PropertyMap<>();
+    private AnyDoubleKeyMap<String, PropertyMapper> propertyMappers = new AnyDoubleKeyMap<>();
 
-    private PropertyMap<PropertyConfig<?, ?>> propertyConfigMap = new PropertyMap<>();
+    private AnyDoubleKeyMap<String, PropertyConfig<?, ?>> propertyConfigMap = new AnyDoubleKeyMap<>();
 
 
     public PropertyResolver getPropertyResolver() {

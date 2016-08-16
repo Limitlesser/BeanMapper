@@ -10,8 +10,8 @@ public class ReflectInstantiate implements Instantiate {
     @Override
     public <T> T instantiate(Class<T> cls) {
         try {
-            Constructor<T>[] constructors = (Constructor<T>[]) cls.getDeclaredConstructors();
-            for (Constructor<T> constructor : constructors) {
+            Constructor[] constructors = cls.getDeclaredConstructors();
+            for (Constructor constructor : constructors) {
                 Class[] parameterTypes = constructor.getParameterTypes();
                 Object[] params = new Object[parameterTypes.length];
                 for (int i = 0; i < parameterTypes.length; i++) {
@@ -30,7 +30,7 @@ public class ReflectInstantiate implements Instantiate {
                         params[i] = null;
                     }
                 }
-                return constructor.newInstance(params);
+                return (T) constructor.newInstance(params);
             }
         } catch (InstantiationException e) {
             e.printStackTrace();

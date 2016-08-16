@@ -1,8 +1,7 @@
-package wind.beanmapper.mapper;
+package wind.beanmapper.context;
 
-import wind.beanmapper.Context;
-import wind.beanmapper.config.ConfigContext;
 import wind.beanmapper.config.MapperConfig;
+import wind.beanmapper.mapper.BaseMapper;
 
 /**
  * Created by wind on 2016/8/15.

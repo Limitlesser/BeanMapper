@@ -1,4 +1,6 @@
-package wind.beanmapper.mapper;
+package wind.beanmapper.context;
+
+import wind.beanmapper.mapper.ClassMapper;
 
 /**
  * Created by wind on 2016/8/15.
