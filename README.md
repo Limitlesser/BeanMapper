@@ -15,7 +15,7 @@ a lib for map properties of java pojo
         ClassMapper<A, B> classMapper = BeanMapper.classMapper(A.class, B.class)
                 .config()
                 .propertyResolver(new CachedPropertyResolver(new ReflectPropertyResolver()))
-                .instantiater(new ReflectInstantiaer())
+                .instantiate(new ReflectInstantiate())
                 .field("name", "Name")
                 .field("birthday", "age", new Converter<Date, Integer>() {
                     @Override

@@ -9,6 +9,10 @@ public abstract class Context<T, R> {
     private Callback<R> callback;
     protected R result;
 
+    public Context(T context) {
+        this.context = context;
+    }
+
     public Context(T context, Callback<R> callback) {
         this.context = context;
         this.callback = callback;
@@ -19,7 +23,9 @@ public abstract class Context<T, R> {
 
     public T end() {
         result = result();
-        callback.end(result);
+        if (callback != null) {
+            callback.end(result);
+        }
         return context;
     }
 

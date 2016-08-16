@@ -2,12 +2,9 @@ package wind.beanmapper;
 
 import org.junit.Test;
 
-import java.util.Date;
-
 import wind.beanmapper.converter.Converter;
-import wind.beanmapper.instantiation.ReflectInstantiaer;
+import wind.beanmapper.instantiation.ReflectInstantiate;
 import wind.beanmapper.mapper.ClassMapper;
-import wind.beanmapper.property.CachedPropertyResolver;
 import wind.beanmapper.property.ReflectPropertyResolver;
 
 import static org.junit.Assert.*;
@@ -23,7 +20,7 @@ public class ExampleUnitTest {
 
     @Test
     public void test() throws Exception {
-        A a = new A("wind",17);
+        A a = new A("wind", 17);
         B b = BeanMapper.map(a, B.class);
         System.out.print(b);
         assertEquals("wind", b.getName());
@@ -33,11 +30,11 @@ public class ExampleUnitTest {
 
     @Test
     public void testCustom() {
-        A a = new A("wind",17);
+        A a = new A("wind", 17);
         ClassMapper<A, B> classMapper = BeanMapper.classMapper(A.class, B.class)
                 .config()
                 .propertyResolver(new ReflectPropertyResolver())
-                .instantiater(new ReflectInstantiaer())
+                .instantiater(new ReflectInstantiate())
                 .field("name", "Name", new Converter<String, String>() {
                     @Override
                     public String convert(String s) {
@@ -53,5 +50,7 @@ public class ExampleUnitTest {
                 .get();
         B b = classMapper.map(a, B.class);
         System.out.print(b);
+        a = classMapper.map(b, A.class);
+        System.out.print(a);
     }
 }

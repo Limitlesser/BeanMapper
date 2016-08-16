@@ -2,7 +2,7 @@ package wind.beanmapper.config;
 
 import wind.beanmapper.Context;
 import wind.beanmapper.converter.Converter;
-import wind.beanmapper.instantiation.Instantiater;
+import wind.beanmapper.instantiation.Instantiate;
 import wind.beanmapper.property.PropertyResolver;
 
 /**
@@ -11,6 +11,10 @@ import wind.beanmapper.property.PropertyResolver;
 public class ConfigContext<T> extends Context<T, MapperConfig> {
 
     private MapperConfig mapperConfig;
+
+    public ConfigContext(T context) {
+        super(context);
+    }
 
     public ConfigContext(T context, Callback<MapperConfig> callback) {
         super(context, callback);
@@ -22,8 +26,8 @@ public class ConfigContext<T> extends Context<T, MapperConfig> {
         return this;
     }
 
-    public ConfigContext<T> instantiater(Instantiater instantiater) {
-        mapperConfig.setInstantiater(instantiater);
+    public ConfigContext<T> instantiater(Instantiate instantiate) {
+        mapperConfig.setInstantiate(instantiate);
         return this;
     }
 

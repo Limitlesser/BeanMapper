@@ -5,16 +5,13 @@ import java.util.Map;
 import wind.beanmapper.config.MapperConfig;
 import wind.beanmapper.config.PropertyConfig;
 import wind.beanmapper.converter.Converter;
-import wind.beanmapper.converter.Converters;
 import wind.beanmapper.property.Property;
 import wind.beanmapper.property.PropertyMapper;
-import wind.beanmapper.property.PropertyResolver;
-import wind.beanmapper.utils.ReflectUtils;
 
 /**
  * Created by wind on 2016/8/13.
  */
-public class BaseMapper<S, D> implements Mapper<S, D> {
+public class BaseMapper implements Mapper {
 
 
     private MapperConfig config;
@@ -24,52 +21,72 @@ public class BaseMapper<S, D> implements Mapper<S, D> {
     }
 
     @Override
-    public D map(S source, Class<D> desClass) {
-        PropertyResolver resolver = config.getPropertyResolver();
+    public <S, D> D map(S source, Class<D> desClass) {
 
-        Map<String, Property<?>> sProperties = resolver.getProperties(source.getClass());
-        Map<String, Property<?>> dProperties = resolver.getProperties(desClass);
+        Map<String, Property<?>> sProperties = resolveProperties(source.getClass());
+        Map<String, Property<?>> dProperties = resolveProperties(desClass);
 
-        D des = config.getInstantiater().instantiate(desClass);
+        D des = instantiate(desClass);
 
         for (Map.Entry<String, Property<?>> entry : dProperties.entrySet()) {
+
             String nameD = entry.getKey();
             Property propertyD = entry.getValue();
 
-            String mappedName = nameD;
-
-            PropertyMapper propertyMapper = config.getPropertyMapper(nameD);
-            if (propertyMapper != null) {
-                mappedName = propertyMapper.map(nameD);
-            }
-
-            Property propertyS = sProperties.get(mappedName);
-
+            Property propertyS = mapProperty(nameD, sProperties);
             if (propertyS == null) {
                 continue;
             }
 
-            PropertyConfig propertyConfig = config.getPropertyConfig(nameD);
-            Converter converter = null;
-            if (propertyConfig != null) {
-                converter = propertyConfig.getConverter();
-            }
+            Object value = convertProperty(propertyS.get(source), propertyS, propertyD);
 
-            if (propertyS.getType().equals(propertyD.getType()) && converter == null) {
-                propertyD.set(des, propertyS.get(source));
-            } else {
-                Object converted;
-
-                if (converter == null) {
-                    converter = config.getConverter(propertyS.getType(), propertyD.getType());
-                }
-                if (converter == null) {
-                    continue;
-                }
-                    converted = converter.convert(propertyS.get(source));
-                propertyD.set(des, converted);
-            }
+            propertyD.set(des, value);
         }
         return des;
     }
+
+    protected Converter getConverter(Property propertyS, Property propertyD) {
+        Converter converter = null;
+        PropertyConfig propertyConfig = config.getPropertyConfig(propertyD.getName());
+        if (propertyConfig != null) {
+            converter = propertyConfig.getConverter();
+        }
+        if (converter == null) {
+            converter = config.getConverter(propertyS.getType(), propertyD.getType());
+        }
+        return converter;
+    }
+
+    protected Object convertProperty(Object value, Property propertyS, Property propertyD) {
+        Converter converter = getConverter(propertyS, propertyD);
+        if (converter != null) {
+            if (propertyS.getType().equals(converter.typeA())) {
+                value = converter.convert(value);
+            } else {
+                value = converter.reconvert(value);
+            }
+        }
+        return value;
+    }
+
+    protected Map<String, Property<?>> resolveProperties(Class cls) {
+        return config.getPropertyResolver().getProperties(cls);
+    }
+
+    protected <T> T instantiate(Class<T> cls) {
+        return config.getInstantiate().instantiate(cls);
+    }
+
+    protected Property<?> mapProperty(String nameD, Map<String, Property<?>> sProperties) {
+        String mappedName = nameD;
+
+        PropertyMapper propertyMapper = config.getPropertyMapper(nameD);
+        if (propertyMapper != null) {
+            mappedName = propertyMapper.map(nameD);
+        }
+
+        return sProperties.get(mappedName);
+    }
+
+
 }

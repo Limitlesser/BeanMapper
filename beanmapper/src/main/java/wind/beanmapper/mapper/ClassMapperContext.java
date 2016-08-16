@@ -8,6 +8,10 @@ public class ClassMapperContext<T, A, B> extends MapperContext<T, ClassMapper<A,
     private Class<A> clsA;
     private Class<B> clsB;
 
+    public ClassMapperContext(T context) {
+        super(context);
+    }
+
     public ClassMapperContext(T context, Callback callback) {
         super(context, callback);
     }

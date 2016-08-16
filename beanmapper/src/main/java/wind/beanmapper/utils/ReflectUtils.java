@@ -8,13 +8,13 @@ import java.lang.reflect.Type;
  */
 public class ReflectUtils {
 
-    public static Class[] getParameterizedTypes(Object object) {
+    public static Class getParameterizedTypes(Object object, int index) {
         Type superclassType = object.getClass().getGenericSuperclass();
         if (!ParameterizedType.class.isAssignableFrom(superclassType.getClass())) {
             return null;
         }
         Type[] types = ((ParameterizedType) superclassType).getActualTypeArguments();
-        return (Class[]) types;
+        return (Class) types[index];
     }
 
 }

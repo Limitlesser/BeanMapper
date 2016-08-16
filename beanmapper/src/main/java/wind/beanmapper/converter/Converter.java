@@ -1,12 +1,22 @@
 package wind.beanmapper.converter;
 
+import wind.beanmapper.utils.ReflectUtils;
+
 /**
  * Created by wind on 2016/8/13.
  */
-public interface Converter<A, B> {
+public abstract class Converter<A, B> {
 
-    B convert(A a);
+    public Class<A> typeA() {
+        return ReflectUtils.getParameterizedTypes(this, 0);
+    }
 
-    A reconvert(B b);
+    public Class<A> typeB() {
+        return ReflectUtils.getParameterizedTypes(this, 1);
+    }
+
+    public abstract B convert(A a);
+
+    public abstract A reconvert(B b);
 
 }

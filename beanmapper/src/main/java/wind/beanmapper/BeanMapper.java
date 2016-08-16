@@ -3,12 +3,11 @@ package wind.beanmapper;
 import java.util.HashMap;
 import java.util.Map;
 
-import wind.beanmapper.instantiation.ReflectInstantiaer;
+import wind.beanmapper.instantiation.ReflectInstantiate;
 import wind.beanmapper.mapper.ClassMapper;
 import wind.beanmapper.mapper.ClassMapperContext;
 import wind.beanmapper.mapper.Mapper;
 import wind.beanmapper.mapper.MapperContext;
-import wind.beanmapper.property.CachedPropertyResolver;
 import wind.beanmapper.property.ReflectPropertyResolver;
 
 /**
@@ -19,16 +18,11 @@ public class BeanMapper {
     private static Mapper mapper;
 
     static {
-        new MapperContext<>(null, new Context.Callback<Mapper>() {
-            @Override
-            public void end(Mapper mapper) {
-                BeanMapper.mapper = mapper;
-            }
-        }).config()
-                .instantiater(new ReflectInstantiaer())
+        mapper = new MapperContext<Context, Mapper>(null).config()
+                .instantiater(new ReflectInstantiate())
                 .propertyResolver(new ReflectPropertyResolver())
                 .end()
-                .end();
+                .get();
     }
 
     private static Map<Class<?>, Map<Class<?>, ClassMapper<?, ?>>> classMapperMap = new HashMap<>();
@@ -37,18 +31,13 @@ public class BeanMapper {
     public static <S, D> D map(S source, Class<D> desClass) {
         ClassMapper classMapper = getClassMapper(source.getClass(), desClass);
         if (classMapper != null) {
-            return (D) classMapper.map(source, desClass);
+            return classMapper.map(source, desClass);
         }
-        return (D) mapper.map(source, desClass);
+        return mapper.map(source, desClass);
     }
 
     public static <A, B> ClassMapperContext<?, A, B> classMapper(Class<A> clsA, Class<B> clsB) {
-        return new ClassMapperContext<>(null, new Context.Callback<Mapper>() {
-            @Override
-            public void end(Mapper o) {
-
-            }
-        });
+        return new ClassMapperContext<Object, A, B>(null, null).classMapper(clsA, clsB);
     }
 
     private static ClassMapper<?, ?> getClassMapper(Class clsA, Class clsB) {

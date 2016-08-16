@@ -5,12 +5,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import wind.beanmapper.converter.Converter;
-import wind.beanmapper.instantiation.Instantiater;
+import wind.beanmapper.instantiation.Instantiate;
 import wind.beanmapper.property.PropertyMap;
 import wind.beanmapper.property.PropertyMapper;
 import wind.beanmapper.property.PropertyNameMapper;
 import wind.beanmapper.property.PropertyResolver;
-import wind.beanmapper.utils.ReflectUtils;
 
 /**
  * Created by wind on 2016/8/13.
@@ -19,9 +18,9 @@ public class MapperConfig {
 
     private PropertyResolver propertyResolver;
 
-    private Map<Class<?>, Map<Class<?>, Converter<?, ?>>> converterMap;
+    private Map<Class<?>, Map<Class<?>, Converter<?, ?>>> converterMap = new HashMap<>();
 
-    private Instantiater instantiater;
+    private Instantiate instantiate;
 
     private PropertyMap<PropertyMapper> propertyMappers = new PropertyMap<>();
 
@@ -32,8 +31,8 @@ public class MapperConfig {
         return propertyResolver;
     }
 
-    public Instantiater getInstantiater() {
-        return instantiater;
+    public Instantiate getInstantiate() {
+        return instantiate;
     }
 
     public PropertyConfig getPropertyConfig(String name) {
@@ -61,19 +60,19 @@ public class MapperConfig {
         this.propertyResolver = propertyResolver;
     }
 
-    public void setInstantiater(Instantiater instantiater) {
-        this.instantiater = instantiater;
+    public void setInstantiate(Instantiate instantiate) {
+        this.instantiate = instantiate;
     }
 
     public void addConverter(Converter converter) {
         if (converterMap == null) {
             converterMap = new HashMap<>();
         }
-        Map<Class<?>, Converter<?, ?>> map = converterMap.get(ReflectUtils.getParameterizedTypes(converter)[0]);
+        Map<Class<?>, Converter<?, ?>> map = converterMap.get(converter.typeA());
         if (map == null) {
             map = new HashMap<>();
         }
-        map.put(ReflectUtils.getParameterizedTypes(converter)[1], converter);
+        map.put(converter.typeB(), converter);
     }
 
     public void putPropertyConfig(String name, PropertyConfig propertyConfig) {
