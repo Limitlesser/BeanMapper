@@ -18,15 +18,6 @@ public class ExampleUnitTest {
         assertEquals(4, 2 + 2);
     }
 
-    @Test
-    public void test() throws Exception {
-        A a = new A("wind", 17);
-        B b = BeanMapper.map(a, B.class);
-        System.out.print(b);
-        assertEquals("wind", b.getName());
-        assertEquals(17, b.getAge());
-
-    }
 
     @Test
     public void testCustom() {
