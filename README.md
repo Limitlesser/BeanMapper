@@ -1,6 +1,11 @@
-## BeanMapper
+### BeanMapper
 
 a lib for map properties of java pojo
+
+## Import
+        dependencies {
+                compile 'wind.beanmapper:beanmapper:1.0'
+        }
 
 # Base Usage
 
